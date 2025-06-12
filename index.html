@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 시장을 만드는 비밀 연구소: AI 자서전 제작 사례</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+        /* === 통합 디자인 시스템 === */
+        :root {
+            --primary-color: #4a90e2; /* Main Blue */
+            --secondary-color: #f5a623; /* Orange Accent */
+            --background-color: #f4f7f9;
+            --text-color: #333;
+            --heading-color: #2c3e50; /* Dark Navy for headings */
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            margin: 0;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem 3rem;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin: 0;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-top: 0.5rem;
+        }
+
+        .section {
+            margin-bottom: 3.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            border-left: 5px solid var(--secondary-color);
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* === 스토리 & 개념 카드 스타일 === */
+        .story-box {
+            background-color: #eef5fc;
+            border: 1px solid #d0e1f0;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .story-box strong { color: var(--primary-color); }
+
+        .concept-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--primary-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .card h3 { margin-top: 0; color: var(--heading-color); }
+        .card .emoji { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+
+        /* === 아카이브 링크 버튼 스타일 (NEW) === */
+        .archive-link-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .archive-link-btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px; /* Pill shape */
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(245, 166, 35, 0.3);
+        }
+
+        .archive-link-btn:hover {
+            background-color: #d88e1a; /* Darker orange */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(245, 166, 35, 0.4);
+        }
+        
+        /* === 통합된 타임라인 스타일 === */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+            margin-top: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 22px; /* Centered for 44px dot */
+            height: 100%;
+            width: 4px;
+            background: #e0e6ec;
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding-left: 60px; /* Increased padding */
+            cursor: pointer;
+        }
+
+        .timeline-item .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 44px;
+            height: 44px;
+            background: var(--card-bg);
+            border: 4px solid var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover .timeline-dot {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .timeline-content {
+            background-color: var(--card-bg);
+            padding: 20px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .timeline-item:hover .timeline-content {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .timeline-content h3 {
+            margin-top: 0;
+            color: var(--heading-color);
+            font-size: 1.5rem;
+        }
+
+        .timeline-content .meta {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .dialogue-container {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            display: none; /* Initially hidden */
+        }
+        
+        .dialogue-box {
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        
+        .dialogue-box.prompt {
+            background-color: #eef5fc; /* Light Blue BG */
+            border-left: 5px solid var(--primary-color);
+        }
+        .dialogue-box.prompt strong { color: var(--primary-color); }
+
+        .dialogue-box.response {
+            background-color: #f8f9fa;
+            border-left: 5px solid #bdc3c7;
+        }
+        .dialogue-box.response strong { color: #7f8c8d; }
+        
+        .dialogue-box strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .toggle-btn {
+            color: var(--primary-color);
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* === AI 연구소 체험 섹션 스타일 === */
+        .lab-section {
+            background-color: #fff;
+            border: 2px solid var(--primary-color);
+            background-color: #fcfdff;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-bottom: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-grow: 1;
+        }
+
+        .btn:hover { background-color: #3a7ac9; }
+        .btn.secondary { background-color: var(--secondary-color); }
+        .btn.secondary:hover { background-color: #d88e1a; }
+
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            min-height: 100px;
+            white-space: pre-wrap;
+            position: relative;
+        }
+        
+        .result-box h4 { margin-top: 0; color: var(--primary-color); }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s ease infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* === 기타 스타일 === */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e6ec;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        ol { padding-left: 20px; }
+        li { margin-bottom: 0.75rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>나만의 시장을 만드는 비밀 연구소 🔬</h1>
+            <p>대화를 자산으로, 관계를 시장으로 만드는 생성형 AI 활용법</p>
+        </header>
+
+        <!-- 1. 도입부 -->
+        <div class="section">
+            <h2>✨ 시작하기 전에: 어떤 이야기인가요?</h2>
+            <div class="story-box">
+                <p>여기 10년 선후배 사이인 두 남자가 있습니다. <strong>권성택 원장님</strong>은 수십 년의 경험을 가진 지혜로운 멘토였고, <strong>안규환 박사님</strong>은 새로운 아이디어로 가득 찬 열정적인 실행가였죠.</p>
+                <p>두 사람은 '생성형 AI'라는 새로운 도구를 가지고 매주 만나 대화하기 시작했습니다. 그들은 AI를 단순한 검색 도구가 아닌, <strong>생각을 기록하고, 패턴을 발견하며, 대화를 구체적인 '자산'으로 만들어주는 똑똑한 파트너</strong>로 활용했어요.</p>
+                <p>그 결과, 그들의 대화는 책, 사업 계획서, 교육 자료, 웹사이트 등 수많은 결과물로 재탄생했습니다. 두 사람 사이의 신뢰와 지식(<strong>관계 자산</strong>)이 그들만의 독특한 가치를 만드는 '<strong>내부 시장</strong>'이 되었고, 이내 세상에 내놓을 수 있는 '<strong>자기 시장</strong>'으로 확장된 것입니다.</p>
+                <p>이 연구소는 바로 여러분이 그들처럼, 친구나 멘토와의 평범한 대화를 통해 <strong>자신만의 잠재력을 발견하고, 지속가능한 가치를 창출</strong>할 수 있도록 돕기 위해 만들어졌습니다.</p>
+            </div>
+        </div>
+
+        <!-- 2. 핵심 개념 -->
+        <div class="section">
+            <h2>💡 핵심 개념: 3분만에 이해하기</h2>
+            <div class="concept-card">
+                <div class="card">
+                    <span class="emoji">🤝</span>
+                    <h3>1. 관계 자산 (Relational Asset)</h3>
+                    <p>친구, 멘토, 선생님과 나누는 신뢰, 존중, 그리고 함께 쌓은 대화와 경험 그 자체를 말해요. 눈에 보이지 않지만, 모든 창조의 가장 중요한 재료입니다.</p>
+                </div>
+                <div class="card">
+                    <span class="emoji">🏪</span>
+                    <h3>2. 내부 시장 (Internal Market)</h3>
+                    <p>나와 파트너, 단 두 사람 사이에서만 통용되는 아이디어와 가치의 교환 장소입니다. 멋진 제품을 출시하기 전의 '비밀 연구개발(R&D) 센터'와 같습니다.</p>
+                </div>
+                <div class="card">
+                    <span class="emoji">🚀</span>
+                    <h3>3. 자기 시장 (Personal Market)</h3>
+                    <p>내부 시장에서 검증되고 단단해진 나만의 가치(콘텐츠, 아이디어, 기술)를 세상에 선보이는 단계입니다. 나만이 할 수 있는 독특한 역할과 브랜드를 만드는 것이죠.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 3. 상세 사례 연구 (자서전 아카이브) -->
+        <div class="section">
+            <h2>📜 사례 연구: AI와 함께한 자서전 제작 여정</h2>
+            <p style="text-align: center; margin-bottom: 0; color: #555;">개념이 실제로 어떻게 적용되었는지, 안규환 박사가 권성택 원장의 자서전을 만드는 7단계 과정을 통해 확인해보세요.</p>
+            
+            <!-- 아카이브 링크 버튼 (NEW) -->
+            <div class="archive-link-container">
+                <a href="https://notebooklm.google.com/notebook/c02a4acc-1a80-4f6e-afcf-fafc9ab5492c?_gl=1*1de329g*_up*MQ..*_ga*MTY5OTUxNTc4Ny4xNzQ5Njg5ODkw*_ga_W0LDH41ZCB*czE3NDk2ODk4OTAkbzEkZzAkdDE3NDk2ODk4OTAkajYwJGwwJGgw" target="_blank" class="archive-link-btn">
+                    🔗 더 깊이 탐구하기: 원본 NotebookLM 전체 아카이브 보기
+                </a>
+            </div>
+
+            <p style="text-align: center; color: #555;">아래 타임라인의 각 단계를 클릭하면 AI와의 실제 대화 기록 요약을 볼 수 있습니다.</p>
+
+            <div class="timeline">
+                <!-- Timeline Item 1 -->
+                <div class="timeline-item" onclick="toggleDialogue(1)">
+                    <div class="timeline-dot">1</div>
+                    <div class="timeline-content">
+                        <h3>1단계: 아이디어의 씨앗</h3>
+                        <p class="meta"><strong>핵심 과업:</strong> 자서전 초안 생성 요청</p>
+                        <p>10년 선배인 권성택 원장님을 주인공으로, '안규환이 바라본' 시점의 자서전 초안(3000단어)을 생성해달라는 첫 번째 프롬프트. 프로젝트의 비전과 방향성을 제시합니다.</p>
+                        <span class="toggle-btn" id="toggle-btn-1">대화 기록 보기 ▼</span>
+                    </div>
+                    <div class="dialogue-container" id="dialogue-1">
+                        <div class="dialogue-box prompt">
+                            <strong>나의 말 (Ann's Prompt):</strong>
+                            <p>너와 대화하는 안규환은 너와 대화를 하면서 나의 10년 선배의 이야기를 많이 했어. 그분은 권성택 원장이야. 내가 오늘 너와 함께 너와 대화하는 안규환이 바라본 권성택 자서전을 생성하고 싶어. 삼천 단어의 영어로 초안을 생성해줘.</p>
+                        </div>
+                        <div class="dialogue-box response">
+                            <strong>ChatGPT의 말 (ChatGPT's Response):</strong>
+                            <p>Here is a 3,000-word English draft autobiography of 권성택 (Kwon Sung-taek), as viewed and narrated by Ann Geu-hwan (안규환) through years of reflection, collaboration, and respect...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 2 -->
+                <div class="timeline-item" onclick="toggleDialogue(2)">
+                    <div class="timeline-dot">2</div>
+                    <div class="timeline-content">
+                        <h3>2단계: 기억의 발굴</h3>
+                        <p class="meta"><strong>핵심 과업:</strong> 구체적인 에피소드 추가 요청</p>
+                        <p>초안에 생동감을 더하기 위해, 두 사람 사이의 구체적인 에피소드를 '대화 목록'이나 '안규환의 기억' 속에서 찾아달라고 요청. 추상적인 묘사를 구체적인 서사로 전환합니다.</p>
+                        <span class="toggle-btn" id="toggle-btn-2">대화 기록 보기 ▼</span>
+                    </div>
+                    <div class="dialogue-container" id="dialogue-2">
+                        <div class="dialogue-box prompt">
+                            <strong>나의 말 (Ann's Prompt):</strong>
+                            <p>안규환과 권성택 간의 에피소드를 너와 대화하는 안규환의 대화목록 또는 아카이브 리스트에서 발견해서 생성해줘.</p>
+                        </div>
+                         <div class="dialogue-box response">
+                            <strong>ChatGPT의 말 (ChatGPT's Response):</strong>
+                            <p>안규환님의 메모리에서 확인한 결과, 직접적인 에피소드는 명시적으로 기록되어 있지 않습니다. 그러나 다음과 같은 간접적 단서와 맥락 정보가 존재합니다. 이를 기반으로 신뢰할 수 있는 서사형 에피소드 창작이 가능합니다...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 3 -->
+                <div class="timeline-item" onclick="toggleDialogue(3)">
+                    <div class="timeline-dot">3</div>
+                    <div class="timeline-content">
+                        <h3>3단계: 데이터의 결합</h3>
+                        <p class="meta"><strong>핵심 과업:</strong> 실제 대화 기록(카톡) 반영</p>
+                        <p>2022년부터 2025년까지의 실제 카카오톡 대화 기록 전체를 제공하며 시간 순서대로 자서전에 반영해달라고 요청. '사실(Data)'과 '서사(Narrative)'를 결합하는 핵심 단계입니다.</p>
+                        <span class="toggle-btn" id="toggle-btn-3">대화 기록 보기 ▼</span>
+                    </div>
+                    <div class="dialogue-container" id="dialogue-3">
+                        <div class="dialogue-box prompt">
+                            <strong>나의 말 (Ann's Prompt):</strong>
+                            <p>아래 내용을 시간순으로 모두 반영해서 권성택의 자서전을 다시 생성해줘. (2022-07-12 ~ 2025-06-11까지의 방대한 카카오톡 대화 기록 전체를 붙여넣음)</p>
+                        </div>
+                        <div class="dialogue-box response">
+                            <strong>ChatGPT의 말 (ChatGPT's Response):</strong>
+                            <p>검색 결과를 열려 했지만, 해당 문서를 찾을 수 없었습니다. 아마도 검색된 콘텐츠가 정확한 파일로 연결되지 않았거나, 내부 연결이 유효하지 않은 상태일 수 있습니다...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Timeline Item 4 -->
+                <div class="timeline-item" onclick="toggleDialogue(4)">
+                    <div class="timeline-dot">4</div>
+                    <div class="timeline-content">
+                        <h3>4단계: 에피소드 분류 및 구조화</h3>
+                        <p class="meta"><strong>핵심 과업:</strong> 대화 기록을 주제별로 분류</p>
+                        <p>방대한 카톡 데이터를 의미 있는 15개의 '에피소드'로 분류해달라고 요청. 흩어져 있던 대화 조각들을 의미 있는 이야기 덩어리로 묶어 자서전의 뼈대를 세웁니다.</p>
+                        <span class="toggle-btn" id="toggle-btn-4">대화 기록 보기 ▼</span>
+                    </div>
+                    <div class="dialogue-container" id="dialogue-4">
+                         <div class="dialogue-box prompt">
+                            <strong>나의 말 (Ann's Prompt):</strong>
+                            <p>아래 내용을 모두 사용해서 에피소드를 분류해줘. (카카오톡 대화 기록 전체를 다시 제공)</p>
+                        </div>
+                         <div class="dialogue-box response">
+                            <strong>ChatGPT의 말 (ChatGPT's Response):</strong>
+                            <p>권성택 × 안규환 카카오톡 대화 — 에피소드별 분류<br>Episode 0: 첫 인사 & 자기소개 (2022-07-12)<br>Episode 1: "빽다방에서 뵙겠습니다" — 만남 예열기 (2024-04-08 ~ 04-30)<br>...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 5 -->
+                <div class="timeline-item" onclick="toggleDialogue(5)">
+                    <div class="timeline-dot">5</div>
+                    <div class="timeline-content">
+                        <h3>5단계: 구조화된 초안 재탄생</h3>
+                        <p class="meta"><strong>핵심 과업:</strong> 분류된 에피소드로 자서전 보강</p>
+                        <p>분류된 15개 에피소드 구조를 활용하여 기존 자서전 초안을 수정 및 보강해달라고 요청. 체계적인 구조 위에서 서사를 재구성하여 완성도를 높입니다.</p>
+                        <span class="toggle-btn" id="toggle-btn-5">대화 기록 보기 ▼</span>
+                    </div>
+                    <div class="dialogue-container" id="dialogue-5">
+                        <div class="dialogue-box prompt">
+                            <strong>나의 말 (Ann's Prompt):</strong>
+                            <p>아래 내용에 방금 전 질문과 답변을 사용해서 권성택 자서전 Draft를 수정하거나 보강해서 다시 생성해줘.</p>
+                        </div>
+                        <div class="dialogue-box response">
+                            <strong>ChatGPT의 말 (ChatGPT's Response):</strong>
+                            <p>🖋️ The Silent Anchor: A Tribute to Kwon Sung-taek<br>(Autobiography-in-dialogue, v2 · compiled by Ann Geu-hwan with ChatGPT)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Timeline Item 6 -->
+                <div class="timeline-item" onclick="toggleDialogue(6)">
+                    <div class="timeline-dot">6</div>
+                    <div class="timeline-content">
+                        <h3>6단계: 메타데이터 분석 및 심화</h3>
+                        <p class="meta"><strong>핵심 과업:</strong> 행동 패턴 분석 및 결합</p>
+                        <p>만남 장소, 비용 등 '메타데이터'를 분석한 표를 자서전에 녹여달라고 요청. 객관적 데이터로 서사의 신뢰도와 깊이를 더하는 분석적 단계입니다.</p>
+                        <span class="toggle-btn" id="toggle-btn-6">대화 기록 보기 ▼</span>
+                    </div>
+                    <div class="dialogue-container" id="dialogue-6">
+                        <div class="dialogue-box prompt">
+                            <strong>나의 말 (Ann's Prompt):</strong>
+                            <p>아래 내용을 다시 사용해서 권성택 저서전을 보강해서 발명해줘. (A~E 패턴으로 분석된 행동 패턴 분석표 제공)</p>
+                        </div>
+                        <div class="dialogue-box response">
+                            <strong>ChatGPT의 말 (ChatGPT's Response):</strong>
+                            <p>🖋️ The Silent Anchor: A Tribute to Kwon Sung-taek (v3)<br>What's New in v3? Financial & ritual metadata... Pattern Key* A = Teams 66$ 구독, B = 정기 공차...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Timeline Item 7 -->
+                <div class="timeline-item" onclick="toggleDialogue(7)">
+                    <div class="timeline-dot">7</div>
+                    <div class="timeline-content">
+                        <h3>7단계: 최종 확장 및 완성</h3>
+                        <p class="meta"><strong>핵심 과업:</strong> 2만 단어 분량으로 확장</p>
+                        <p>지금까지의 모든 대화 기록과 분석 내용을 총망라하여, 최종적으로 2만 단어 분량의 깊이 있는 장편 자서전으로 완성해달라고 요청. 프로젝트의 최종 결과물을 생성합니다.</p>
+                        <span class="toggle-btn" id="toggle-btn-7">대화 기록 보기 ▼</span>
+                    </div>
+                    <div class="dialogue-container" id="dialogue-7">
+                        <div class="dialogue-box prompt">
+                            <strong>나의 말 (Ann's Prompt):</strong>
+                            <p>2만 단어의 영문 형식으로 권성택 자서전을 다시 생성해줘.</p>
+                        </div>
+                        <div class="dialogue-box response">
+                            <strong>ChatGPT의 말 (ChatGPT's Response):</strong>
+                            <p>물론입니다. 안규환님의 시선으로 본 권성택 원장님의 자서전을, 제공해주신 모든 카카오톡 대화 기록과 에피소드 분류표를 총망라하여 20,000단어 분량의 영문 자서전으로 확장 및 재창조하겠습니다...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. 체험형 도구 -->
+        <div class="section lab-section">
+            <h2>🧪 AI 코파일럿 비밀 연구소: 직접 체험하기!</h2>
+            <p>이제 여러분 차례입니다! 친구, 부모님, 또는 멘토와 나눈 대화(카톡, 문자 등)의 일부를 아래에 붙여넣어 보세요. AI 코파일럿이 여러분의 대화 속에 숨겨진 '자산'을 어떻게 발견하는지 시뮬레이션으로 보여드릴게요!</p>
+            
+            <textarea id="conversationInput" placeholder="여기에 친구나 멘토와 나눈 대화 내용을 5~10줄 정도 붙여넣어 보세요. (예시)
+나: 쌤, 저 진로 때문에 너무 고민이에요. 뭘 잘하는지 모르겠어요.
+선생님: 너무 조급해하지 마. 넌 항상 질문을 깊게 하는 장점이 있잖아. 그게 너의 시작점이 될 수도 있어."></textarea>
+
+            <div class="button-group">
+                <button class="btn" onclick="analyze('keywords')">💎 숨은 키워드 찾기</button>
+                <button class="btn" onclick="analyze('questions')">❓ 더 깊은 질문 만들기</button>
+                <button class="btn secondary" onclick="analyze('assets')">💡 아이디어 자산화 (초안)</button>
+            </div>
+
+            <div class="result-box">
+                <div id="spinner" class="spinner"></div>
+                <h4>AI 코파일럿 분석 결과:</h4>
+                <div id="analysisResult"><p>버튼을 눌러 분석을 시작하세요...</p></div>
+            </div>
+        </div>
+        
+        <!-- 5. 실천 가이드 -->
+        <div class="section">
+            <h2>👣 이제 당신의 차례입니다</h2>
+            <p>거창할 필요 없어요. 지금 바로 시작할 수 있습니다.</p>
+            <ol>
+                <li><strong>나의 '권성택' 찾기:</strong> 당신의 이야기를 진지하게 들어줄 파트너를 찾아보세요. 가장 친한 친구, 존경하는 선생님, 부모님도 좋습니다.</li>
+                <li><strong>대화하고 기록하기:</strong> 고민, 아이디어, 꿈에 대해 이야기하고 그 대화를 저장해두세요. 카톡 대화도 훌륭한 기록입니다.</li>
+                <li><strong>AI와 함께 돌아보기:</strong> 일주일에 한 번, 이 연구소 같은 도구를 이용해 대화를 돌아보며 숨겨진 키워드나 질문을 찾아보세요.</li>
+                <li><strong>작게 창조하기:</strong> 대화에서 얻은 통찰을 짧은 글, 그림, 발표 자료, 스터디 계획 등 작은 결과물로 만들어보세요. 그것이 '자기 시장'의 첫걸음입니다.</li>
+            </ol>
+            <p><strong>기억하세요. 당신의 모든 대화는 잠재적인 자산입니다.</strong> 생성형 AI는 그 자산을 발견하고 빛나게 해줄 가장 강력한 파트너가 될 것입니다. 당신의 인생이라는 위대한 프로젝트를 오늘, 지금, 여기서 시작하세요!</p>
+        </div>
+
+        <footer>
+            <p>© 2025 My Market Lab. Inspired by the partnership of Kwon Sung-taek & Ann Geu-hwan.</p>
+        </footer>
+    </div>
+
+    <script>
+        /**
+         * 타임라인의 대화 기록을 토글하는 함수
+         * @param {number} id - 토글할 타임라인 아이템의 ID
+         */
+        function toggleDialogue(id) {
+            const dialogue = document.getElementById('dialogue-' + id);
+            const btn = document.getElementById('toggle-btn-' + id);
+            const isOpening = dialogue.style.display !== 'block';
+
+            // 모든 대화창과 버튼을 초기 상태로 되돌림
+            const allDialogues = document.querySelectorAll('.dialogue-container');
+            const allBtns = document.querySelectorAll('.toggle-btn');
+            allDialogues.forEach(d => d.style.display = 'none');
+            allBtns.forEach(b => b.textContent = '대화 기록 보기 ▼');
+
+            // 현재 클릭된 아이템만 상태를 변경
+            if (isOpening) {
+                dialogue.style.display = 'block';
+                btn.textContent = '대화 기록 닫기 ▲';
+            }
+        }
+        
+        /**
+         * AI 연구소에서 대화 내용을 분석하는 시뮬레이션 함수
+         * @param {string} type - 분석 유형 ('keywords', 'questions', 'assets')
+         */
+        function analyze(type) {
+            const input = document.getElementById('conversationInput').value;
+            const resultDiv = document.getElementById('analysisResult');
+            const spinner = document.getElementById('spinner');
+
+            if (input.trim() === "") {
+                resultDiv.innerHTML = '<p style="color: red;">분석할 대화 내용을 입력해주세요!</p>';
+                return;
+            }
+
+            resultDiv.innerHTML = '';
+            spinner.style.display = 'block';
+
+            // AI 처리 시간 시뮬레이션
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                let output = '';
+                
+                // 실제 앱에서는 이 부분이 생성형 AI API 호출로 대체됩니다.
+                if (type === 'keywords') {
+                    output = `<h4>💎 숨은 키워드 분석</h4>
+                        <p>대화에서 다음 5개의 핵심 키워드를 발견했습니다:</p>
+                        <ul>
+                            <li><strong>진로 고민:</strong> 현재 가장 큰 화두이자 문제 정의의 시작점입니다.</li>
+                            <li><strong>강점 발견:</strong> '깊은 질문'이라는 구체적인 강점이 언급되었습니다.</li>
+                            <li><strong>조급함:</strong> 현재 느끼는 감정적 상태를 나타냅니다.</li>
+                            <li><strong>시작점:</strong> 막막함 속에서 나아갈 방향을 모색하려는 의지입니다.</li>
+                            <li><strong>가능성:</strong> 멘토는 현재의 고민을 미래의 가능성으로 연결해주고 있습니다.</li>
+                        </ul>`;
+                } else if (type === 'questions') {
+                    output = `<h4>❓ 더 깊은 질문 만들기</h4>
+                        <p>이 대화를 한 단계 발전시키기 위한 다음 질문들입니다:</p>
+                        <ul>
+                            <li>'질문을 깊게 하는 능력'을 구체적으로 어떤 활동(예: 독서 토론, 인터뷰, 실험 설계)에 활용해볼 수 있을까요?</li>
+                            <li>지난 1년간 내가 가장 흥미롭게 던졌던 질문 3가지는 무엇이었나요? 그 질문들의 공통점은 무엇일까요?</li>
+                            <li>'조급함'이라는 감정을 느끼게 하는 외부의 압박 요인은 무엇이며, 그것을 잠시 차단할 수 있는 나만의 방법은 무엇일까요?</li>
+                        </ul>`;
+                } else if (type === 'assets') {
+                    output = `<h4>💡 아이디어 자산화 (블로그 글 초안)</h4>
+                        <p><strong>제목: "잘하는 게 없다고 느낄 때, 나만의 '질문력'을 발견하는 법"</strong></p>
+                        <p>많은 친구들이 '무엇을 잘하는지 모르겠다'는 진로 고민에 빠집니다. 저 또한 그랬습니다. 하지만 최근 멘토 선생님과의 대화를 통해 뜻밖의 발견을 했습니다. 바로 저의 '질문하는 능력'이 강력한 무기가 될 수 있다는 것이었죠.</p>
+                        <p>우리는 정답을 찾는 데 익숙하지만, 위대한 발견은 언제나 위대한 질문에서 시작됩니다. 혹시 당신도 남들이 그냥 지나치는 것에 '왜?'라고 묻는 자신을 발견한 적 없나요? 그것이 바로 당신만의 '시장'을 여는 첫 번째 열쇠일지 모릅니다...</p>
+                        <p><em>(이 초안을 바탕으로 당신의 경험을 더해 한 편의 글을 완성해보세요!)</em></p>`;
+                }
+                resultDiv.innerHTML = output;
+
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>
